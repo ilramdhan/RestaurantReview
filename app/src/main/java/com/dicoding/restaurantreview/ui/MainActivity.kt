@@ -49,9 +49,15 @@ class MainActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-        mainViewModel.snackbarText.observe(this) {
-            Snackbar.make(window.decorView.rootView, it, Snackbar.LENGTH_SHORT).show()
-        }
+        mainViewModel.snackbarText.observe(this, {
+            it.getContentIfNotHandled()?.let { snackbarText ->
+                Snackbar.make(
+                    window.decorView.rootView,
+                    snackbarText,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        })
 
         binding.btnSend.setOnClickListener { view ->
             mainViewModel.postReview(binding.edReview.text.toString())

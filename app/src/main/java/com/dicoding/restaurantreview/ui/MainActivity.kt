@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.dicoding.restaurantreview.data.respon.CustomerReviewsItem
 import com.dicoding.restaurantreview.data.respon.Restaurant
 import com.dicoding.restaurantreview.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,7 +48,18 @@ class MainActivity : AppCompatActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
+
+        mainViewModel.snackbarText.observe(this) {
+            Snackbar.make(window.decorView.rootView, it, Snackbar.LENGTH_SHORT).show()
+        }
+
+        binding.btnSend.setOnClickListener { view ->
+            mainViewModel.postReview(binding.edReview.text.toString())
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
+
 
     private fun setRestaurantData(restaurant: Restaurant) {
         binding.tvTitle.text = restaurant.name
